@@ -42,13 +42,16 @@ function Wall({ numRow, numCol, boardCode, setBoardCode = noop }) {
   let colNames = [
     '', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'
   ]
-
+  let cols = ['']
+  for (let i = 0; i < numCol; i++) {
+    cols.push(colNames[i + 1])
+  }
   // add column label
   rows.push(
     <div style={{
       display: 'flex'
     }}>
-      {colNames.map((name) => <div key={name} style={{ flexGrow: 1 }}>{name}</div>)}
+      {cols.map((name) => <div key={name} style={{ flexGrow: 1 }}>{name}</div>)}
     </div>
   )
 
@@ -113,7 +116,7 @@ function Wall({ numRow, numCol, boardCode, setBoardCode = noop }) {
 function QR({ value }) {
   return <QRCode
     size={256}
-    style={{ height: "auto", maxWidth: "100%", width: "30%" }}
+    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
     value={value}
     viewBox={`0 0 256 256`}
   />
@@ -162,12 +165,7 @@ export default function App() {
   console.log(value)
   return (
     <main>
-      {/* <Form>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Wall IP address</Form.Label>
-          <Form.Control type="text" placeholder="196.128.1.x" />
-        </Form.Group>
-      </Form> */}
+
       <pre>{JSON.stringify(boardCode)}</pre>
       {!showQR ?
         <Wall
@@ -183,7 +181,24 @@ export default function App() {
       <Button
         onClick={() => { setBoardCode({}) }}
       >Reset</Button>
-      <QR value={value} />
+      <Form>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Num Row</Form.Label>
+          <Form.Control type="number" placeholder="18" value={numRow}
+            onChange={(e) => setNumRow(e.target.value)}
+          />
+          <Form.Label>Num Col</Form.Label>
+          <Form.Control type="number" placeholder="11" value={numCol}
+            onChange={(e) => setNumCol(e.target.value)}
+          />
+        </Form.Group>
+      </Form>
+      <QRCode
+        size={256}
+        style={{ height: "auto", maxWidth: "100%", width: "30%" }}
+        value={value}
+        viewBox={`0 0 256 256`}
+      />
     </main>
   )
 }
